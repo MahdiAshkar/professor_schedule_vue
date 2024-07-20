@@ -8,7 +8,9 @@
   <img src="register.png" alt="register" />
   <img src="modal.png" alt="modal" />
 </p>
-## Project setup
+
+### Project setup
+
 ```
 npm install
 ```
