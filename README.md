@@ -1,7 +1,7 @@
 # professor_schedule_vue
 ![dashboardPage](dashboard.png)
 ![login](login.png)
-![homePage](homePage.png)
+![homePage](homepage.png)
 ![register](register.png)
 ## Project setup
 ```
