@@ -1,5 +1,8 @@
 # professor_schedule_vue
-
+![dashboardPage](dashboard.png)
+![login](login.png)
+![homePage](homePage.png)
+![register](register.png)
 ## Project setup
 ```
 npm install
