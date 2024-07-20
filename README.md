@@ -1,5 +1,6 @@
 # professor_schedule_vue
 ![dashboardPage](dashboard.png)
+![modal](modal.png)
 ![login](login.png)
 ![homePage](homepage.png)
 ![register](register.png)
