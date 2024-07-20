@@ -1,0 +1,460 @@
+<!-- <template>
+  <ModalTime></ModalTime>
+
+  <table>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">8</th>
+      <th scope="col">9</th>
+      <th scope="col">10</th>
+      <th scope="col">11</th>
+      <th scope="col">12</th>
+      <th scope="col">13</th>
+      <th scope="col">14</th>
+      <th scope="col">15</th>
+      <th scope="col">16</th>
+      <th scope="col">17</th>
+      <th scope="col">18</th>
+    </tr>
+    <tr>
+      <th scope="row">شنبه</th>
+      <td colspan="2" @click="as">پروژه تحقیقاتی</td>
+      <td colspan="2">فرایند جداسازی</td>
+      <td colspan="2">سیستم های انرژی</td>
+      <td colspan="2">فرایند جداسازی</td>
+      <td colspan="3">فرایند جداسازی</td>
+    </tr>
+    <tr>
+      <th scope="row">یکشنبه</th>
+      <td colspan="2">پروژه تحقیقاتی</td>
+      <td>فرایند جداسازی</td>
+      <td>سیستم های انرژی</td>
+      <td>فرایند جداسازی</td>
+    </tr>
+    <tr>
+      <th scope="row">دوشنبه</th>
+      <td>پروژه تحقیقاتی</td>
+      <td>فرایند جداسازی</td>
+      <td>سیستم های انرژی</td>
+      <td>فرایند جداسازی</td>
+    </tr>
+    <tr>
+      <th scope="row">سه شنبه</th>
+      <td>پروژه تحقیقاتی</td>
+      <td>فرایند جداسازی</td>
+      <td>سیستم های انرژی</td>
+      <td>فرایند جداسازی</td>
+    </tr>
+    <tr>
+      <th scope="row">چهارشنبه</th>
+      <td>پروژه تحقیقاتی</td>
+      <td>فرایند جداسازی</td>
+      <td>سیستم های انرژی</td>
+      <td>فرایند جداسازی</td>
+    </tr>
+  </table>
+</template>
+
+<script>
+import ModalTime from "@/components/ModalTime.vue";
+export default {
+  components: { ModalTime },
+};
+</script>
+
+<style>
+th,
+td {
+  border: 1px solid rgb(160 160 160);
+  padding: 5px;
+}
+
+td:hover {
+  background-color: rgba(214, 139, 19, 0.658);
+}
+th[scope="col"] {
+  background-color: papayawhip;
+  color: #000000;
+  text-align: center;
+  font-family: "Vazir";
+}
+
+th[scope="row"] {
+  background-color: papayawhip;
+  font-family: "Vazir";
+  text-align: center;
+}
+
+td {
+  text-align: center;
+  font-family: "Vazir";
+}
+
+tr:nth-of-type(even) {
+  background-color: #eee;
+}
+
+table {
+  border-collapse: collapse;
+  border: 2px solid rgb(140 140 140);
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+}
+</style> -->
+
+<!-- <template>
+  <div>
+    <table border="1">
+      <thead>
+        <tr>
+          <th></th>
+          <th v-for="time in times" :key="time">{{ time }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="day in days" :key="day">
+          <td class="time">{{ time }}</td>
+          <template v-for="time in times" :key="day + time">
+            <td
+              v-if="!isCellMerged(day, time)"
+              :rowspan="getRowSpan(day, time)"
+              @click="editTask(day, time)"
+            >
+              {{ getTask(day, time) }}
+            </td>
+          </template>
+        </tr>
+      </tbody>
+    </table>
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <div class="header">
+          <span class="close fa fa-close" @click="showModal = false"></span>
+          <h5>{{ daysPersian[days.indexOf(modalDay)] }} - {{ modalTime }}</h5>
+        </div>
+        <textarea v-model="taskInput"></textarea>
+        <div>
+          <label>End Time:</label>
+          <select v-model="endTime">
+            <option v-for="time in times" :key="time" :value="time">
+              {{ time }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label>start Time:</label>
+          <select v-model="modalTime">
+            <option v-for="time in times" :key="time" :value="time">
+              {{ time }}
+            </option>
+          </select>
+        </div>
+        <button @click="saveTask">Save</button>
+      </div>
+    </div>
+  </div>
+</template>
+  
+<script>
+import ModalTime from "@/components/ModalTime.vue";
+export default {
+  components: { ModalTime },
+  data() {
+    return {
+      daysPersian: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه"],
+      days: ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"],
+      times: [
+        "8:00  AM",
+        "9:00  AM",
+        "10:00 AM",
+        "11:00 AM",
+        "12:00 PM",
+        "1:00  PM",
+        "2:00  PM",
+        "3:00  PM",
+        "4:00  PM",
+        "5:00  PM",
+        "6:00  PM",
+      ],
+      tasks: {
+        Saturday: {},
+        Sunday: {},
+        Monday: {},
+        Tuesday: {},
+        Wednesday: {},
+      },
+      showModal: false,
+      modalDay: "",
+      modalTime: "",
+      taskInput: "",
+      endTime: "9:00 AM",
+    };
+  },
+  methods: {
+    editTask(day, time) {
+      this.modalDay = day;
+      this.modalTime = time;
+      this.taskInput = this.tasks[day][time]?.task || "";
+      this.endTime =
+        this.tasks[day][time]?.endTime ||
+        this.times[this.times.indexOf(time) + 1];
+      this.showModal = true;
+    },
+    saveTask() {
+      if (!this.tasks[this.modalDay]) {
+        this.tasks[this.modalDay] = {};
+      }
+      const endTimeIndex = this.times.indexOf(this.endTime);
+      const timeIndex = this.times.indexOf(this.modalTime);
+      const duration = endTimeIndex - timeIndex + 1;
+
+      this.tasks[this.modalDay][this.modalTime] = {
+        task: this.taskInput,
+        endTime: this.endTime,
+        duration: duration,
+      };
+      console.log(this.tasks);
+      this.showModal = false;
+    },
+    isCellMerged(day, time) {
+      const task = this.tasks[day][time];
+      if (task?.task && task.duration > 1) {
+        for (let i = 1; i < task.duration; i++) {
+          if (this.times[this.times.indexOf(time) + i]) {
+            return this.times[this.times[this.times.indexOf(time) + i]] == time;
+          }
+        }
+      }
+      return false;
+    },
+    getRowSpan(day, time) {
+      const objTask = this.tasks[day][time];
+      if (objTask?.task && objTask?.duration > 1) {
+        return objTask.duration;
+      }
+      return 1;
+    },
+    getTask(day, time) {
+      return this.tasks[day][time]?.task || "";
+    },
+  },
+};
+</script>
+
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.close {
+  float: end;
+  font-size: 24px;
+  cursor: pointer;
+}
+thead,
+.time {
+  background-color: papayawhip;
+}
+/* td:hover {
+  background-color: rgba(214, 139, 19, 0.658);
+} */
+</style>
+   -->
+   <!-- <template>
+  <div>
+    <button @click="openModal" class="add-button">اضافه کردن</button>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>روز</th>
+          <th v-for="time in times" :key="time">{{ time }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="day in days" :key="day">
+          <td>{{ day }}</td>
+          <!-- <td
+            v-for="time in filteredTimes(day)"
+            :key="time"
+            :colspan="getColSpan(day, time)"
+            class="scheduled"
+          >
+            {{ getTask(day, time) }}
+          </td> -->
+          <!-- <td
+            :v-for="time in filteredTimes(day)"
+            :key="time"
+            :colspan="getColSpan(day, time)"
+              @click="editTask(day, time)"
+          >
+            {{ getTask(day, time) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button @click="saveSchedule" class="save-button">ذخیره</button>
+    <modal v-if="showModal" @close="closeModal" @save="addSchedule"></modal>
+  </div>
+</template>
+  
+  <script>
+import Modal from "./Modal.vue";
+import axios from "axios";
+
+export default {
+  components: {
+    Modal,
+  },
+  data() {
+    return {
+      times: [
+        "8:00",
+        "9:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+      ],
+      days: [
+        "شنبه",
+        "یک‌شنبه",
+        "دو‌شنبه",
+        "سه‌شنبه",
+        "چهار‌شنبه",
+        "پنج‌شنبه",
+        "جمعه",
+      ],
+      showModal: false,
+      schedule: [],
+    };
+  },
+  methods: {
+    openModal() {
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    addSchedule(newEntry) {
+      this.schedule.push(newEntry);
+      this.closeModal();
+    },
+    saveSchedule() {
+      axios
+        .post("/api/schedule", this.schedule)
+        .then((response) => {
+          console.log("Saved:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    },
+    getColSpan(day, time) {
+      const entry = this.schedule.find(
+        (entry) => entry.day === day && entry.startTime === time
+      );
+      if (entry) {
+        const startIndex = this.times.indexOf(entry.startTime);
+        const endIndex = this.times.indexOf(entry.endTime);
+        return endIndex - startIndex;
+      }
+      return 1;
+    },
+    getTask(day, time) {
+      const entry = this.schedule.find(
+        (entry) => entry.day === day && entry.startTime === time
+      );
+      return entry ? entry.task : "";
+    },
+    filteredTimes(day) {
+      return this.times.filter((time) => !this.isMergedCell(day, time));
+    },
+    isMergedCell(day, time) {
+      return this.schedule.some(
+        (entry) =>
+          entry.day === day && entry.startTime < time && entry.endTime > time
+      );
+    },
+  },
+}; -->
+<!-- </script>
+  
+  <style scoped>
+.add-button,
+.save-button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-button:hover,
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.schedule-table th {
+  background-color: #f2f2f2;
+}
+
+.scheduled {
+  background-color: #e6f7ff;
+}
+</style>
+   -->
