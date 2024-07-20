@@ -1,9 +1,13 @@
 # professor_schedule_vue
 ![dashboardPage](dashboard.png)
-
 ![login](login.png)
 ![homePage](homepage.png)
-![register](register.png) ![modal](modal.png)
+
+
+<p align="center">
+  <img src="register.png" alt="register" width="300"/>
+  <img src="modal.png" alt="modal" width="300"/>
+</p>
 ## Project setup
 ```
 npm install
