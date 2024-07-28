@@ -225,10 +225,10 @@ export default {
       } catch (err) {}
     },
 
-    async getIdSchedule(id, term, acadamicYear) {
+    async getIdSchedule(id, term, academicYear) {
       try {
         const res = await axios.get(
-          `http://localhost:3000/schedule/${id}/${term}/${acadamicYear}`
+          `http://localhost:3000/schedule/${id}/${term}/${academicYear}`
         );
         if (res.status == 200) {
           return res.data;

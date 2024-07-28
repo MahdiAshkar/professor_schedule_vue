@@ -138,6 +138,8 @@ export default {
       formData.append("password", this.password);
       formData.append("email", this.email);
       formData.append("photo", this.photo);
+      if (this.phone_office != null)
+        formData.append("phone_office", this.phone_office);
       formData.append("group", this.group);
       formData.append("rank", this.rank);
 
