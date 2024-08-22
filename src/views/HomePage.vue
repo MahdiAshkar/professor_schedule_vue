@@ -4,19 +4,37 @@
       <div class="section-logo">
         <img src="../assets/white-logo.png" alt="logo" />
         <div class="title-logo">برنامه اساتید دانشگاه قم</div>
+        <div v-if="!student" class="login">
+          <button @click="toLogin">ورود</button>
+        </div>
+        <div v-else class="account">
+          <button @click="toAccount">پروفایل کاربری</button>
+          <button
+            disabled
+            style="
+              background-color: mediumblue;
+              color: white;
+              margin-left: 15px;
+              cursor: default;
+            "
+          >
+            {{ student.name }}
+          </button>
+        </div>
       </div>
     </div>
     <div class="page-search">
       <div class="search-box">
         <input
+          v-on:keyup.enter="search"
           type="text"
           v-model="searchQuery"
           placeholder="نام استاد را وارد کنید..."
         />
         <div class="select-box">
-          <select v-model="groupSearch">
-            <option disabled value="">گروه را انتخاب کنید</option>
-            <option v-for="group in groups" @change="searchGroup" :key="group">
+          <select v-model="groupSearch" @click="search">
+            <option value="">گروه را انتخاب کنید</option>
+            <option v-for="group in groups" :key="group">
               {{ group }}
             </option>
           </select>
@@ -29,6 +47,7 @@
           v-for="professor in paginatedProfessors"
           :key="professor.id"
           :professor="professor"
+          :student="student"
         />
       </div>
       <div v-else class="not-found">چیزی پیدا نشد!</div>
@@ -44,6 +63,7 @@
 
 <script>
 import Card from "@/components/Card.vue";
+import getCookie from "@/utils/function";
 import axios from "axios";
 import Paginator from "primevue/paginator";
 export default {
@@ -55,9 +75,11 @@ export default {
     return {
       searchQuery: "",
       professors: [],
+      student: null,
       currentPage: 1,
       itemsPerPage: 10,
       filteredProfessors: [],
+      baseURl: "http://localhost:3000",
       groups: [
         "آمار",
         "اخلاق",
@@ -96,6 +118,7 @@ export default {
       ],
       groupSearch: "",
       first: 0,
+      id: null,
     };
   },
   computed: {
@@ -107,31 +130,60 @@ export default {
   },
   mounted() {
     this.getAllProfessors();
+    this.isAccount();
   },
   methods: {
-    searchGroup() {
-      console.log("object");
-      this.filteredProfessors = this.professors.filter((item) =>
-        item.group.includes(this.groupSearch)
-      );
-    },
     closeSearch() {
       this.searchQuery = "";
       this.filteredProfessors = this.professors;
+      this.groupSearch = "";
     },
-    search() {
+    async isAccount() {
+      const s_token = getCookie("student_token");
+      if (s_token) {
+        try {
+          const res = await axios.get(
+            `${this.baseURl}/s/checkToken/${s_token}`,
+            {
+              withCredentials: true,
+            }
+          );
+          if (res.status == 200) {
+            this.student = res.data;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+
+    toAccount() {
+      this.$router.push({
+        name: "DashboardStudentPage",
+        params: { id: this.student._id },
+      });
+    },
+    toLogin() {
+      this.$router.push({ name: "StudentLoginPage" });
+    },
+    async search() {
       if (this.searchQuery.includes("ی"))
         this.searchQuery = this.searchQuery.replace("ی", "ي");
-      if (this.groupSearch)
-        this.filteredProfessors = this.professors.filter(
-          (professor) =>
-            professor.name.includes(this.searchQuery) &&
-            professor.group.includes(this.groupSearch)
-        );
-      else
-        this.filteredProfessors = this.professors.filter((professor) =>
-          professor.name.includes(this.searchQuery)
-        );
+      try {
+        if (this.groupSearch) {
+          const response = await axios.get(
+            `http://localhost:3000/professor/search?query=${this.searchQuery}&group=${this.groupSearch}`
+          );
+          this.filteredProfessors = response.data;
+        } else {
+          const response = await axios.get(
+            `http://localhost:3000/professor/search?query=${this.searchQuery}`
+          );
+          this.filteredProfessors = response.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     async getAllProfessors() {
       try {
@@ -218,7 +270,7 @@ input[text]:focus {
 
 .header {
   height: 180px;
-  margin-bottom: -85px;
+  margin-bottom: -60px;
   width: 100%;
   background-position: center bottom;
   background-size: cover;
@@ -227,7 +279,48 @@ input[text]:focus {
   padding: 16px;
   text-align: center;
 }
+button {
+  background: #fff;
+  color: #007bff;
+  font-size: 22px;
+  border: 5px;
+  border-color: #007bff;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 2px 20px 5px;
+  transition: background 0.3s ease;
+}
+.login {
+  margin-right: 60%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+.account {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  margin-right: 50%;
 
+  margin-top: 0.5%;
+}
+.account button {
+  height: 50px;
+  margin-top: 15px;
+  background-color: none;
+  color: #000000;
+  font-size: 15px;
+  border: none;
+  border-color: #007bff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.account img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin-left: 15px;
+}
 input {
   margin-top: 16px;
   padding: 8px;

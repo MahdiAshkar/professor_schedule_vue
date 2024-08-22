@@ -148,7 +148,6 @@ export default {
           "http://localhost:3000/professor/register",
           formData
         );
-        console.log(response);
         if (response.status == 201) {
           this.$refs.toast.add({
             severity: "success",

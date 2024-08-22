@@ -40,30 +40,21 @@
                   <p class="pl-2">صفحه اصلی</p>
                 </a>
               </li>
+
               <li class="nav-item" :class="{ active: showAccount }">
                 <a
-                  @click="ShowAccount()"
+                  @click="show"
                   class="nav-link d-flex gap-5 fa fa-user"
                   href="#"
                   ><p class="pl-2">حساب کاربری</p>
                 </a>
               </li>
-              <li class="nav-item" :class="{ active: showProgram }">
-                <a
-                  @click="ShowProgram()"
-                  class="nav-link d-flex gap-5 fa fa-calendar"
-                  href="#"
-                >
-                  <p class="pl-2">برنامه</p>
-                </a>
-              </li>
               <li class="nav-item" :class="{ active: showChat }">
                 <a
-                  @click="ShowChat()"
+                  @click="show_chat"
                   class="nav-link d-flex gap-5 fa fa-comment"
                   href="#"
-                >
-                  <p class="pl-2">پیام ها</p>
+                  ><p class="pl-2">پیام ها</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -79,22 +70,11 @@
           </div>
         </div>
       </div>
-
-      <main v-if="showProgram" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div
-          class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
-        >
-          <img src="logo_qom.ico" alt="logo Qom" width="50px" height="50px" />
-
-          <h1 class="h2 ml-4">{{ name }}</h1>
-        </div>
-        <scheduleTable :show="false" :id="id"></scheduleTable>
-      </main>
-      <main v-else-if="showChat" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <TableChatHistory :data="data"></TableChatHistory>
+      <main v-if="showAccount" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <StudentChangeAccount :data="data"></StudentChangeAccount>
       </main>
       <main v-else class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <changeAccountPage :data="data"></changeAccountPage>
+        <TableHistoryStudent :data="data"></TableHistoryStudent>
       </main>
     </div>
   </div>
@@ -103,17 +83,23 @@
 <script>
 import scheduleTable from "@/components/ScheduleTable.vue";
 import changeAccountPage from "./changeAccountPage.vue";
-import axios from "axios";
 import ChatPage from "./chatPage.vue";
-import TableChatHistory from "./tableChatHistory.vue";
+import axios from "axios";
+import StudentChangeAccount from "./studentChangeAccount.vue";
+import TableHistoryStudent from "./tableHistoryStudent.vue";
 export default {
-  components: { scheduleTable, changeAccountPage, ChatPage, TableChatHistory },
+  components: {
+    scheduleTable,
+    changeAccountPage,
+    ChatPage,
+    StudentChangeAccount,
+    TableHistoryStudent,
+  },
   data() {
     return {
-      showProgram: true,
-      showAccount: false,
-      showChat: false,
       name: "",
+      showAccount: true,
+      showChat: false,
       baseURl: "http://localhost:3000",
       data: {},
       id: this.$route.params.id,
@@ -121,34 +107,39 @@ export default {
   },
   async mounted() {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/professor/${this.id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.get(`http://localhost:3000/s/info/${this.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
       this.data = res.data;
       this.name = res.data.name;
       if (res.statusText == "OK") {
-        console.log("success get info professor in dashboard");
-      } else throw new Error("failed request get info professor dashboard");
+        console.log("success get info student in dashboard");
+      } else throw new Error("failed request get info student dashboard");
     } catch (err) {
       console.log(err);
     }
   },
   methods: {
+    show() {
+      this.showChat = false;
+      this.showAccount = true;
+    },
+    show_chat() {
+      this.showAccount = false;
+      this.showChat = true;
+    },
     getSourcePhoto() {
-      return this.baseURl + this.data.image_profile;
+      return this.baseURl + this.data.image;
     },
     home() {
       this.$router.push("/home");
     },
     async exit() {
       try {
-        let res = await axios.get("http://localhost:3000/professor/logout", {
+        let res = await axios.get("http://localhost:3000/s/logout", {
           headers: {
             "Content-Type": "application/json",
           },
@@ -158,25 +149,10 @@ export default {
           throw new Error("Failed to log out");
         }
 
-        this.$router.push("/login");
+        this.$router.push("/student/login");
       } catch (error) {
         console.log(error);
       }
-    },
-    ShowAccount() {
-      this.showAccount = true;
-      this.showProgram = false;
-      this.showChat = false;
-    },
-    ShowProgram() {
-      this.showAccount = false;
-      this.showProgram = true;
-      this.showChat = false;
-    },
-    ShowChat() {
-      this.showAccount = false;
-      this.showProgram = false;
-      this.showChat = true;
     },
   },
 };
@@ -190,15 +166,15 @@ export default {
   border-radius: 50%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  border: 10px solid #00256e;
-  margin-left: 20%;
-  margin-right: 20%;
+  border: 10px solid rgb(248, 155, 6);
+  margin-left: 10%;
+  margin-right: 10%;
 }
 .image-container img {
   width: 100%;
   height: 100%;
   object-fit: fill;
-  border-radius: 50%;
+  border-radius: 25%;
 }
 
 .bd-placeholder-img {
@@ -291,7 +267,7 @@ p {
 .sidebar {
   min-height: 100vh;
   max-width: 400px;
-  background-color: #001c55;
+  background-color: rgb(240, 153, 14);
   /* papayawhip; */
   margin: auto;
 }

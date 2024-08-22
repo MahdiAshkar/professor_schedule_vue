@@ -10,11 +10,10 @@
             >
               <div class="nav-register text1 text w-100">
                 <h2>خوش آمدید</h2>
-                <p>اگر حساب کاربری ندارید؟</p>
                 <router-link
                   class="btn btn-white btn-outline-white register"
-                  :to="{ name: 'registerPage' }"
-                  >ثبت نام</router-link
+                  :to="{ name: 'HomePage' }"
+                  >صفحه اصلی</router-link
                 >
               </div>
             </div>
@@ -27,12 +26,12 @@
               </div>
               <form @submit.prevent="login" class="signin-form">
                 <div class="form-group mb-3">
-                  <label class="label" for="name">نام کاربری</label>
+                  <label class="label" for="name">شماره دانشجویی</label>
                   <input
                     v-model="username"
                     type="text"
                     class="form-control"
-                    placeholder="نام کاربری"
+                    placeholder="شماره دانشجویی"
                     required
                   />
                 </div>
@@ -62,8 +61,8 @@
     </div>
   </section>
 </template>
-    
-    <script>
+      
+      <script>
 export default {
   data() {
     return { username: "", password: "" };
@@ -71,13 +70,13 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await fetch("http://localhost:3000/professor/login", {
+        const response = await fetch("http://localhost:3000/s/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username: this.username,
+            studentNumber: this.username,
             password: this.password,
           }),
         });
@@ -85,14 +84,14 @@ export default {
           this.$refs.toast.add({
             severity: "error",
             summary: "خطا",
-            detail: "نام کاربری یا رمز عبور اشتباه است !",
+            detail: "شماره دانشجویی یا رمز عبور اشتباه است !",
             life: 2500,
           });
           return;
         }
         const data = await response.json();
         const id = data.id;
-        document.cookie = `access_token=${data.token};path=/;`;
+        document.cookie = `student_token=${data.token};path=/;`;
         this.$refs.toast.add({
           severity: "success",
           summary: "موفقیت آمیز",
@@ -102,7 +101,7 @@ export default {
 
         setTimeout(() => {
           this.$router.push({
-            name: "DashboardPage",
+            name: "DashboardStudentPage",
             params: { id },
           });
         }, 1000);
@@ -117,8 +116,8 @@ export default {
   },
 };
 </script>
-    
-<style scoped>
+      
+  <style scoped>
 .nav-register .register {
   color: black;
   background-color: white;
@@ -141,7 +140,7 @@ export default {
 }
 
 .wrap1 {
-  background-color: #001c55;
+  background-color: rgb(240, 153, 14);
   /* papayawhip; */
   color: white;
 }
@@ -158,7 +157,7 @@ label {
   color: white;
 }
 .form-control1 {
-  background-color: #001c55;
+  background-color: rgb(240, 153, 14);
   /* rgb(240, 153, 14); */
   margin-top: 12px;
   color: white;

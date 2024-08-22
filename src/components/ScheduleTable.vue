@@ -152,7 +152,6 @@ export default {
         const res = await axios.get(
           `http://localhost:3000/schedule/latest/${this.id}`
         );
-        console.log(res);
         if (res.status == 200) {
           const data = res.data[0];
           let apiSchedules = data.days;
@@ -325,7 +324,6 @@ export default {
               });
             }
           }
-          console.log(response);
         } catch (err) {
           console.log(err);
           this.$refs.toast.add({
