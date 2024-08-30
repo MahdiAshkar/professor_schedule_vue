@@ -1,15 +1,12 @@
 # professor_schedule_vue
 
-![dashboardPage](dashboard.png)
-![login](login.png)
-![homePage](homepage.png)
+# Project launch
 
-<p align="center">
-  <img src="register.png" alt="register" />
-  <img src="modal.png" alt="modal" />
-</p>
+## Change domain for deployment
 
-### Project setup
+If the location of the server-side application implemented with node js has changed, you must change its domain from https://schedule-professor.liara.run to the domain where you uploaded the application.
+
+## install package
 
 ```
 npm install
@@ -27,12 +24,11 @@ npm run serve
 npm run build
 ```
 
-### Lints and fixes files
+![dashboardPage](dashboard.png)
+![login](login.png)
+![homePage](homepage.png)
 
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<p align="center">
+  <img src="register.png" alt="register" />
+  <img src="modal.png" alt="modal" />
+</p>
