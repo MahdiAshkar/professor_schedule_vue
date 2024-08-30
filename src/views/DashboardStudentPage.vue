@@ -87,6 +87,7 @@ import ChatPage from "./chatPage.vue";
 import axios from "axios";
 import StudentChangeAccount from "./studentChangeAccount.vue";
 import TableHistoryStudent from "./tableHistoryStudent.vue";
+import Cookies from "js-cookie";
 export default {
   components: {
     scheduleTable,
@@ -100,19 +101,22 @@ export default {
       name: "",
       showAccount: true,
       showChat: false,
-      baseURl: "http://localhost:3000",
+      baseURl: "https://schedule-professor.liara.run",
       data: {},
       id: this.$route.params.id,
     };
   },
   async mounted() {
     try {
-      const res = await axios.get(`http://localhost:3000/s/info/${this.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `https://schedule-professor.liara.run/s/info/${this.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
       this.data = res.data;
       this.name = res.data.name;
       if (res.statusText == "OK") {
@@ -139,16 +143,19 @@ export default {
     },
     async exit() {
       try {
-        let res = await axios.get("http://localhost:3000/s/logout", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        });
-        if (res.statusText !== "OK") {
-          throw new Error("Failed to log out");
+        let res = await axios.get(
+          "https://schedule-professor.liara.run/s/logout",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        if (res.status !== 200) {
+          console.log("Failed to log out");
         }
-
+        Cookies.remove("student_token");
         this.$router.push("/student/login");
       } catch (error) {
         console.log(error);

@@ -59,6 +59,7 @@
 </template>
   
   <script>
+import getCookie from "@/utils/function";
 import axios from "axios";
 
 export default {
@@ -140,6 +141,7 @@ export default {
         return;
       }
       const formData = new FormData();
+      const token = getCookie("access_token");
       formData.append("newName", this.name);
       formData.append("newUsername", this.username);
       formData.append("newPassword", this.password);
@@ -149,10 +151,11 @@ export default {
       formData.append("newPhoneOffice", this.phone_office);
       formData.append("email", this.email);
       formData.append("newPhoto", this.photo);
+      formData.append("token", token);
 
       try {
         const response = await axios.put(
-          "http://localhost:3000/professor/update",
+          "https://schedule-professor.liara.run/professor/update",
           formData,
           { withCredentials: true }
         );

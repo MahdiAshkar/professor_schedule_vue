@@ -55,7 +55,7 @@ export default {
     return {
       conversations: [],
       student: this.data,
-      baseUrl: "http://localhost:3000",
+      baseUrl: "https://schedule-professor.liara.run",
     };
   },
   mounted() {

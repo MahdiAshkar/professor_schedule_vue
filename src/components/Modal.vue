@@ -132,7 +132,7 @@ export default {
   background-color: #d9534f;
   padding-right: 25px;
   padding-left: 25px;
-  padding-top: 10px;
+  padding-top: 4px;
   padding-bottom: 10px;
   margin-right: 10px;
 }
@@ -140,7 +140,7 @@ export default {
 .save {
   padding-right: 25px;
   padding-left: 25px;
-  padding-top: 10px;
+  padding-top: 4px;
   padding-bottom: 10px;
 }
 

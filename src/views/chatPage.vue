@@ -54,11 +54,13 @@ export default {
       senderName: this.$route.params.senderName,
       imageProfessor: this.$route.params.imageProfessor,
       imageStudent: this.$route.params.imageStudent,
-      baseUrl: "http://localhost:3000",
+      baseUrl: "https://schedule-professor.liara.run",
     };
   },
   mounted() {
-    this.socket = io("http://localhost:3000", { withCredentials: true });
+    this.socket = io("https://schedule-professor.liara.run", {
+      withCredentials: true,
+    });
     this.socket.emit("joinPrivateChat", {
       studentId: this.studentId,
       professorId: this.professorId,

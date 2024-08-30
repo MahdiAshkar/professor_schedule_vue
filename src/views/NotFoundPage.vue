@@ -3,7 +3,7 @@
     <img src="/images/404.png" />
     <p class="title">صفحه مورد نظر یافت نشد</p>
     <p>این صفحه وجود ندارد یا شما دسترسی ندارید.</p>
-    <router-link to="/home">بازگشت به صفحه اصلی</router-link>
+    <router-link to="/">بازگشت به صفحه اصلی</router-link>
   </div>
 </template>
   

@@ -70,16 +70,19 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await fetch("http://localhost:3000/s/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            studentNumber: this.username,
-            password: this.password,
-          }),
-        });
+        const response = await fetch(
+          "https://schedule-professor.liara.run/s/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              studentNumber: this.username,
+              password: this.password,
+            }),
+          }
+        );
         if (!response.ok) {
           this.$refs.toast.add({
             severity: "error",

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Toast ref="toast" position="top-left" />
-    <form @submit.prevent="updateProfessor">
+    <form @submit.prevent="updateStudent">
       <div class="form-group">
         <label for="photo">عکس پروفایل:</label>
         <input type="file" @change="onFileChange" />
@@ -31,13 +31,16 @@
 </template>
     
     <script>
+import getCookie from "@/utils/function";
 import axios from "axios";
 
 export default {
-  props: ["data"],
+  props: ["data", "studentNumber"],
   async mounted() {
     this.name = this.data.name || "";
-    this.studentNumber = this.data.studentNumber || "";
+    this.studentNumber = this.data.studentNumber || this.studentNumber;
+    console.log("studentNumber", this.studentNumber);
+    // this.fetchData();
   },
 
   data() {
@@ -47,13 +50,30 @@ export default {
       studentNumber: "",
       photo: "",
       confirmPassword: "",
+      dataStudent: {},
     };
   },
   methods: {
+    async fetchData() {
+      try {
+        const res = await axios.get(
+          `https://schedule-professor.liara.run/s/info/${this.$route.params.id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        this.dataStudent = res?.data;
+        console.log(res?.data);
+        this.studentNumber =
+          this.data.studentNumber || this.dataStudent.studentNumber;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     onFileChange(e) {
       this.photo = e.target.files[0];
     },
-    async updateProfessor() {
+    async updateStudent() {
       if (this.password !== this.confirmPassword) {
         this.$refs.toast.add({
           severity: "error",
@@ -64,14 +84,16 @@ export default {
         return;
       }
       const formData = new FormData();
+      const token = getCookie("student_token");
       formData.append("name", this.name);
       formData.append("password", this.password);
       formData.append("studentNumber", this.studentNumber);
       formData.append("image", this.photo);
+      formData.append("token", token);
 
       try {
         const response = await axios.put(
-          "http://localhost:3000/s/update",
+          "https://schedule-professor.liara.run/s/update",
           formData,
           { withCredentials: true }
         );

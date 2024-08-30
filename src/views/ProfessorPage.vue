@@ -54,14 +54,16 @@ export default {
       name: "",
       email: "",
       phone_office: "",
-      baseURl: "http://localhost:3000",
+      baseURl: "https://schedule-professor.liara.run",
       data: {},
       id: this.$route.params.id,
     };
   },
   async mounted() {
     try {
-      const res = await axios.get(`http://localhost:3000/professor/${this.id}`);
+      const res = await axios.get(
+        `https://schedule-professor.liara.run/professor/${this.id}`
+      );
       this.data = res.data;
       this.name = res.data.name;
       this.email = res.data.email;

@@ -28,6 +28,11 @@ const routes = [
     component: HomePage,
   },
   {
+    path: "/",
+    name: "Home",
+    component: HomePage,
+  },
+  {
     path: "/professor/:id",
     name: "ProfessorPage",
     component: ProfessorPage,
@@ -80,11 +85,11 @@ router.beforeEach(async (to, from, next) => {
       let res;
       if (isStudent) {
         res = await axios.get(
-          `http://localhost:3000/checkId/${studentId}/${stuToken}`
+          `https://schedule-professor.liara.run/checkId/${studentId}/${stuToken}`
         );
       } else {
         res = await axios.get(
-          `http://localhost:3000/checkId/${professorId}/${profToken}`
+          `https://schedule-professor.liara.run/checkId/${professorId}/${profToken}`
         );
       }
       const isAuthChat = res.data;
@@ -126,7 +131,7 @@ router.beforeEach(async (to, from, next) => {
     const id = to.params.id;
     try {
       const res = await axios.get(
-        `http://localhost:3000/checkId/${id}/${profToken}`
+        `https://schedule-professor.liara.run/checkId/${id}/${profToken}`
       );
       isAuth = res.data;
 
@@ -143,7 +148,7 @@ router.beforeEach(async (to, from, next) => {
     const id = to.params.id;
     try {
       const res = await axios.get(
-        `http://localhost:3000/checkId/${id}/${stuToken}`
+        `https://schedule-professor.liara.run/checkId/${id}/${stuToken}`
       );
       isAuth = res.data;
       if (stuToken && isAuth) {

@@ -150,7 +150,7 @@ export default {
     async getLatestSchedule() {
       try {
         const res = await axios.get(
-          `http://localhost:3000/schedule/latest/${this.id}`
+          `https://schedule-professor.liara.run/schedule/latest/${this.id}`
         );
         if (res.status == 200) {
           const data = res.data[0];
@@ -197,7 +197,7 @@ export default {
         );
         if (idSchedule) {
           let res = await axios.get(
-            `http://localhost:3000/schedule/${idSchedule}`
+            `https://schedule-professor.liara.run/schedule/${idSchedule}`
           );
           let apiSchedules = res.data.days;
           this.convertApiFormatToVue(apiSchedules);
@@ -227,7 +227,7 @@ export default {
     async getIdSchedule(id, term, academicYear) {
       try {
         const res = await axios.get(
-          `http://localhost:3000/schedule/${id}/${term}/${academicYear}`
+          `https://schedule-professor.liara.run/schedule/${id}/${term}/${academicYear}`
         );
         if (res.status == 200) {
           return res.data;
@@ -272,11 +272,11 @@ export default {
         return this.$router.push({ name: "LoginPage" });
       }
       let total = this.durationTotal();
-      if (total >= 2) {
+      if (total >= 10) {
         try {
           if (this.showSubmit) {
-            var response = await axios.post(
-              "http://localhost:3000/professor/create-schedule",
+            const response = await axios.post(
+              "https://schedule-professor.liara.run/professor/create-schedule",
               infoSchedule,
               {
                 withCredentials: true,
@@ -304,7 +304,7 @@ export default {
               this.academicYear
             );
             var response = await axios.put(
-              `http://localhost:3000/professor/update-schedule/${id}`,
+              `https://schedule-professor.liara.run/professor/update-schedule/${id}`,
               infoSchedule,
               { withCredentials: true }
             );
@@ -361,11 +361,12 @@ export default {
           duration: entry.duration,
         });
       });
-
+      const token = getCookie("access_token");
       return {
         days: Object.values(daysMap),
         academicYear: this.academicYear,
         term: this.term,
+        token,
       };
     },
     calculateEndTime(startTime, duration) {

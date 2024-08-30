@@ -94,7 +94,10 @@
         <TableChatHistory :data="data"></TableChatHistory>
       </main>
       <main v-else class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <changeAccountPage :data="data"></changeAccountPage>
+        <changeAccountPage
+          :data="data"
+          :studentNumber="studentNumber"
+        ></changeAccountPage>
       </main>
     </div>
   </div>
@@ -106,6 +109,7 @@ import changeAccountPage from "./changeAccountPage.vue";
 import axios from "axios";
 import ChatPage from "./chatPage.vue";
 import TableChatHistory from "./tableChatHistory.vue";
+import Cookies from "js-cookie";
 export default {
   components: { scheduleTable, changeAccountPage, ChatPage, TableChatHistory },
   data() {
@@ -114,15 +118,16 @@ export default {
       showAccount: false,
       showChat: false,
       name: "",
-      baseURl: "http://localhost:3000",
+      baseURl: "https://schedule-professor.liara.run",
       data: {},
       id: this.$route.params.id,
+      studentNumber: "",
     };
   },
   async mounted() {
     try {
       const res = await axios.get(
-        `http://localhost:3000/professor/${this.id}`,
+        `https://schedule-professor.liara.run/professor/${this.id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -132,6 +137,7 @@ export default {
       );
       this.data = res.data;
       this.name = res.data.name;
+      this.studentNumber = res.data.studentNumber;
       if (res.statusText == "OK") {
         console.log("success get info professor in dashboard");
       } else throw new Error("failed request get info professor dashboard");
@@ -148,16 +154,19 @@ export default {
     },
     async exit() {
       try {
-        let res = await axios.get("http://localhost:3000/professor/logout", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        });
-        if (res.statusText !== "OK") {
-          throw new Error("Failed to log out");
+        let res = await axios.get(
+          "https://schedule-professor.liara.run/professor/logout",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        if (res.status !== 200) {
+          console.log("Failed to log out");
         }
-
+        Cookies.remove("access_token");
         this.$router.push("/login");
       } catch (error) {
         console.log(error);

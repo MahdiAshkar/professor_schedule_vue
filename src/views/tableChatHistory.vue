@@ -1,7 +1,7 @@
 
   <template>
   <div class="section-table">
-    <table class="table">
+    <table v-if="conversations.length !== 0" class="table">
       <thead>
         <tr>
           <th>عملیات</th>
@@ -44,6 +44,9 @@
         </tr>
       </tbody>
     </table>
+    <div v-else class="not-found">
+      <p>مکالمه ای یافت نشد .</p>
+    </div>
   </div>
 </template>
 
@@ -59,7 +62,7 @@ export default {
     return {
       conversations: [],
       professor: this.data,
-      baseUrl: "http://localhost:3000",
+      baseUrl: "https://schedule-professor.liara.run",
     };
   },
   mounted() {
@@ -106,6 +109,20 @@ export default {
 
 
 <style scoped>
+.not-found {
+  background-color: #007bff;
+  border-radius: 20px;
+  height: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  margin-top: 15%;
+  margin-right: 10%;
+  color: white;
+  font-size: 30px;
+  width: 80%;
+}
 .section-table {
   margin-top: 5%;
 }

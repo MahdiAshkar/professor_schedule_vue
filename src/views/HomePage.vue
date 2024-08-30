@@ -79,7 +79,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       filteredProfessors: [],
-      baseURl: "http://localhost:3000",
+      baseURl: "https://schedule-professor.liara.run",
       groups: [
         "آمار",
         "اخلاق",
@@ -172,12 +172,12 @@ export default {
       try {
         if (this.groupSearch) {
           const response = await axios.get(
-            `http://localhost:3000/professor/search?query=${this.searchQuery}&group=${this.groupSearch}`
+            `https://schedule-professor.liara.run/professor/search?query=${this.searchQuery}&group=${this.groupSearch}`
           );
           this.filteredProfessors = response.data;
         } else {
           const response = await axios.get(
-            `http://localhost:3000/professor/search?query=${this.searchQuery}`
+            `https://schedule-professor.liara.run/professor/search?query=${this.searchQuery}`
           );
           this.filteredProfessors = response.data;
         }
@@ -187,7 +187,9 @@ export default {
     },
     async getAllProfessors() {
       try {
-        const response = await axios.get("http://localhost:3000/professor/all");
+        const response = await axios.get(
+          "https://schedule-professor.liara.run/professor/all"
+        );
         this.professors = response.data;
         this.filteredProfessors = this.professors;
       } catch (error) {

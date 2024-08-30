@@ -55,8 +55,14 @@
           <input type="email" v-model="email" required />
         </div>
       </div>
-
-      <button type="submit">ثبت نام</button>
+      <div class="form-group-row">
+        <button class="form-group" type="submit">ثبت نام</button>
+        <router-link
+          class="form-group btn btn-white"
+          :to="{ name: 'LoginPage' }"
+          >بازگشت</router-link
+        >
+      </div>
     </form>
   </div>
 </template>
@@ -145,7 +151,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/professor/register",
+          "https://schedule-professor.liara.run/professor/register",
           formData
         );
         if (response.status == 201) {
@@ -227,8 +233,9 @@ select {
   background-color: white;
 }
 
-button {
-  width: 100%;
+button,
+.btn {
+  width: 50%;
   padding: 0.75rem;
   background-color: #007bff;
   color: white;

@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      baseURl: "http://localhost:3000",
+      baseURl: "https://schedule-professor.liara.run",
     };
   },
   methods: {
